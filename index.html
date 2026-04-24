@@ -69,47 +69,50 @@
 <!-- Card Grafik -->
 <div class="card">
   <div class="controls-row">
-    <select id="gramasi-select">
-      <option value="0.1">0.1 gram</option>
-      <option value="0.25">0.25 gram</option>
-      <option value="0.5">0.5 gram</option>
-      <option value="1" selected>1 gram</option>
-      <option value="2">2 gram</option>
-      <option value="5">5 gram</option>
-      <option value="10">10 gram</option>
-      <option value="25">25 gram</option>
-      <option value="50">50 gram</option>
-      <option value="100">100 gram</option>
-      <option value="125">125 gram</option>
-      <option value="150">150 gram</option>
-      <option value="175">175 gram</option>
-      <option value="200">200 gram</option>
-      <option value="250">250 gram</option>
-      <option value="500">500 gram</option>
-      <option value="1000">1000 gram</option>
-    </select>
-    <select id="series-select">
-      <option value="Gold">Gold</option>
-      <option value="Prime">Prime</option>
-    </select>
-    <span class="separator">|</span>
-    <select id="range-select" onchange="toggleDatePicker(this.value)">
-      <option value="7">7 hari terakhir</option>
-      <option value="14">14 hari terakhir</option>
-      <option value="30" selected>30 hari terakhir</option>
-      <option value="0">Semua data</option>
-      <option value="custom">Pilih tanggal...</option>
-    </select>
-    <div id="date-picker" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;" class="controls-row">
-      <input type="date" id="date-from" style="width:140px">
-      <span class="separator">s/d</span>
-      <input type="date" id="date-to" style="width:140px">
-      <button class="btn btn-green" onclick="applyDateFilter()">Terapkan</button>
-      <button class="btn" onclick="resetDateFilter()">Reset</button>
-    </div>
-    <span class="separator">|</span>
-    <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
-    <button class="btn" onclick="exportJSON()">Export JSON</button>
+  <select id="gramasi-select">
+    <option value="0.1">0.1 gram</option>
+    <option value="0.25">0.25 gram</option>
+    <option value="0.5">0.5 gram</option>
+    <option value="1" selected>1 gram</option>
+    <option value="2">2 gram</option>
+    <option value="5">5 gram</option>
+    <option value="10">10 gram</option>
+    <option value="25">25 gram</option>
+    <option value="50">50 gram</option>
+    <option value="100">100 gram</option>
+    <option value="125">125 gram</option>
+    <option value="150">150 gram</option>
+    <option value="175">175 gram</option>
+    <option value="200">200 gram</option>
+    <option value="250">250 gram</option>
+    <option value="500">500 gram</option>
+    <option value="1000">1000 gram</option>
+  </select>
+  <select id="series-select">
+    <option value="Gold">Gold</option>
+    <option value="Prime">Prime</option>
+  </select>
+  <span class="separator">|</span>
+  <select id="range-select" onchange="toggleDatePicker(this.value)">
+    <option value="7">7 hari terakhir</option>
+    <option value="14">14 hari terakhir</option>
+    <option value="30" selected>30 hari terakhir</option>
+    <option value="0">Semua data</option>
+    <option value="custom">Pilih tanggal...</option>
+  </select>
+  <span class="separator">|</span>
+  <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
+  <button class="btn" onclick="exportJSON()">Export JSON</button>
+</div>
+
+<!-- Baris kedua khusus date picker -->
+<div id="date-picker" style="display:none; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:16px;">
+  <input type="date" id="date-from" style="width:150px">
+  <span class="separator">s/d</span>
+  <input type="date" id="date-to" style="width:150px">
+  <button class="btn btn-green" onclick="applyDateFilter()">Terapkan</button>
+  <button class="btn" onclick="resetDateFilter()">Reset</button>
+</div>
   </div>
   <p class="section-title">Grafik Harga Jual vs Buyback</p>
   <div class="chart-wrap">
