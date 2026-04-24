@@ -1,0 +1,26 @@
+name: Fetch HRTA Gold Price
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python fetch_price.py
+      - name: Simpan perubahan ke repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add gold_history.csv
+          git diff --staged --quiet || git commit -m "Update harga emas $(date +%Y-%m-%d)"
+          git push
