@@ -38,8 +38,8 @@
 <p class="sub">Data diperbarui otomatis setiap 3 jam dari hrtagold.id</p>
 
 <div class="metrics">
-  <div class="metric"><div class="metric-label">Harga Jual (1gr Gold)</div><div class="metric-value" id="m-price">—</div><div class="metric-sub last-update" id="m-date">Memuat...</div></div>
-  <div class="metric"><div class="metric-label">Buyback (1gr Gold)</div><div class="metric-value" id="m-buyback">—</div><div class="metric-sub">Harga beli kembali</div></div>
+  <div class="metric"><div class="metric-label" id="label-price">Harga Jual (1gr Gold)</div><div class="metric-value" id="m-price">—</div><div class="metric-sub last-update" id="m-date">Memuat...</div></div>
+  <div class="metric"><div class="metric-label" id="label-buyback">Buyback (1gr Gold)</div><div class="metric-value" id="m-buyback">—</div><div class="metric-sub">Harga beli kembali</div></div>
   <div class="metric"><div class="metric-label">Spread</div><div class="metric-value" id="m-spread">—</div><div class="metric-sub">Selisih jual vs buyback</div></div>
   <div class="metric"><div class="metric-label">Total Data</div><div class="metric-value" id="m-count">—</div><div class="metric-sub">entri tercatat</div></div>
 </div>
@@ -132,10 +132,17 @@ function getFiltered() {
 }
 
 function updateMetrics() {
-  const gold1gr = allData.filter(r => r.gramasi === 1 && r.series === 'Gold');
-  gold1gr.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
-  if (!gold1gr.length) return;
-  const last = gold1gr[gold1gr.length - 1];
+  const gramasi = parseFloat(document.getElementById('gramasi-select').value);
+  const series = document.getElementById('series-select').value;
+  const label = gramasi % 1 === 0 ? gramasi + 'gr' : gramasi + 'gr';
+
+  let filtered = allData.filter(r => r.gramasi === gramasi && r.series === series);
+  filtered.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+  if (!filtered.length) return;
+  const last = filtered[filtered.length - 1];
+
+  document.getElementById('label-price').textContent = `Harga Jual (${label} ${series})`;
+  document.getElementById('label-buyback').textContent = `Buyback (${label} ${series})`;
   document.getElementById('m-price').textContent = fmt(last.harga_jual);
   document.getElementById('m-buyback').textContent = fmt(last.harga_buyback);
   document.getElementById('m-spread').textContent =
@@ -203,6 +210,7 @@ function renderTable(data) {
 
 function refresh() {
   const data = getFiltered();
+  updateMetrics();
   renderChart(data);
   renderTable(data);
 }
