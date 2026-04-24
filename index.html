@@ -93,6 +93,34 @@ const CSV_URL = `https://raw.githubusercontent.com/${USERNAME}/${REPO}/main/gold
 let allData = [];
 let chart = null;
 
+// ⚠️ PEMILIHAN BERDASARKAN JENIS GOLD / PRIME
+document.getElementById('series-select').addEventListener('change', function() {
+  const series = this.value;
+  const gramasiSelect = document.getElementById('gramasi-select');
+  
+  const goldOptions = [
+    ['0.1', '0.1 gram'], ['0.25', '0.25 gram'], ['0.5', '0.5 gram'],
+    ['1', '1 gram'], ['2', '2 gram'], ['5', '5 gram'], ['10', '10 gram'],
+    ['25', '25 gram'], ['50', '50 gram'], ['100', '100 gram'],
+    ['125', '125 gram'], ['150', '150 gram'], ['175', '175 gram'],
+    ['200', '200 gram'], ['250', '250 gram'], ['500', '500 gram'],
+    ['1000', '1000 gram']
+  ];
+  
+  const primeOptions = [
+    ['25', '25 gram'], ['50', '50 gram'], ['100', '100 gram']
+  ];
+  
+  const options = series === 'Prime' ? primeOptions : goldOptions;
+  const defaultVal = series === 'Prime' ? '25' : '1';
+  
+  gramasiSelect.innerHTML = options
+    .map(([v, l]) => `<option value="${v}"${v === defaultVal ? ' selected' : ''}>${l}</option>`)
+    .join('');
+  
+  refresh();
+});
+  
 function fmt(n) { return 'Rp ' + Math.round(n).toLocaleString('id-ID'); }
 function fmtDate(s) {
   const d = new Date(s);
