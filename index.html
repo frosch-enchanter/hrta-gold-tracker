@@ -209,6 +209,7 @@ function renderTable(data) {
 }
 
 // ⚠️ PEMILIHAN BERDASARKAN JENIS GOLD / PRIME
+document.getElementById('gramasi-select').addEventListener('change', refresh);
 document.getElementById('series-select').addEventListener('change', function() {
   const series = this.value;
   const gramasiSelect = document.getElementById('gramasi-select');
