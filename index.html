@@ -208,13 +208,6 @@ function renderTable(data) {
   </table>`;
 }
 
-function refresh() {
-  const data = getFiltered();
-  updateMetrics();
-  renderChart(data);
-  renderTable(data);
-}
-
 // ⚠️ PEMILIHAN BERDASARKAN JENIS GOLD / PRIME
 document.getElementById('series-select').addEventListener('change', function() {
   const series = this.value;
@@ -242,6 +235,14 @@ document.getElementById('series-select').addEventListener('change', function() {
   
   refresh();
 });
+  
+function refresh() {
+  const data = getFiltered();
+  updateMetrics();
+  renderChart(data);
+  renderTable(data);
+}
+
   
 document.getElementById('range-select').addEventListener('change', refresh);
 
