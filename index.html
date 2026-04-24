@@ -134,12 +134,14 @@ function getFiltered() {
 function updateMetrics() {
   const gramasi = parseFloat(document.getElementById('gramasi-select').value);
   const series = document.getElementById('series-select').value;
-  const label = gramasi % 1 === 0 ? gramasi + 'gr' : gramasi + 'gr';
+  const label = gramasi + 'gr';
 
   let filtered = allData.filter(r => r.gramasi === gramasi && r.series === series);
   filtered.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
   if (!filtered.length) return;
+
   const last = filtered[filtered.length - 1];
+  const prev = filtered.length > 1 ? filtered[filtered.length - 2] : null;
 
   document.getElementById('label-price').textContent = `Harga Jual (${label} ${series})`;
   document.getElementById('label-buyback').textContent = `Buyback (${label} ${series})`;
@@ -148,7 +150,26 @@ function updateMetrics() {
   document.getElementById('m-spread').textContent =
     (((last.harga_jual - last.harga_buyback) / last.harga_jual) * 100).toFixed(1) + '%';
   document.getElementById('m-date').textContent = 'Update: ' + fmtDate(last.tanggal);
-  document.getElementById('m-count').textContent = allData.length.toLocaleString('id-ID');
+
+  // Opsi A — perubahan dari data sebelumnya
+  if (prev) {
+    const diff = last.harga_jual - prev.harga_jual;
+    const pct = ((diff / prev.harga_jual) * 100).toFixed(2);
+    if (diff > 0) {
+      document.getElementById('m-change').textContent = `▲ ${fmt(diff)} (+${pct}%)`;
+      document.getElementById('m-change').style.color = '#1a9e6e';
+    } else if (diff < 0) {
+      document.getElementById('m-change').textContent = `▼ ${fmt(Math.abs(diff))} (${pct}%)`;
+      document.getElementById('m-change').style.color = '#d95030';
+    } else {
+      document.getElementById('m-change').textContent = 'Tidak ada perubahan';
+      document.getElementById('m-change').style.color = '#aaa';
+    }
+    document.getElementById('m-change-sub').textContent = 'vs update sebelumnya';
+  } else {
+    document.getElementById('m-change').textContent = '—';
+    document.getElementById('m-change-sub').textContent = 'Belum ada data pembanding';
+  }
 }
 
 function renderChart(data) {
