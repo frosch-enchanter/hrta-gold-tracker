@@ -70,8 +70,6 @@
 <div class="card">
   <div class="controls-row">
   <select id="gramasi-select">
-    <option value="0.1">0.1 gram</option>
-    <option value="0.25">0.25 gram</option>
     <option value="0.5">0.5 gram</option>
     <option value="1" selected>1 gram</option>
     <option value="2">2 gram</option>
@@ -322,7 +320,7 @@ document.getElementById('series-select').addEventListener('change', function() {
   const series = this.value;
   const gramasiSelect = document.getElementById('gramasi-select');
   const goldOptions = [
-    ['0.1','0.1 gram'],['0.25','0.25 gram'],['0.5','0.5 gram'],['1','1 gram'],
+    ['0.5','0.5 gram'],['1','1 gram'],
     ['2','2 gram'],['5','5 gram'],['10','10 gram'],['25','25 gram'],
     ['50','50 gram'],['100','100 gram'],['125','125 gram'],['150','150 gram'],
     ['175','175 gram'],['200','200 gram'],['250','250 gram'],['500','500 gram'],['1000','1000 gram']
