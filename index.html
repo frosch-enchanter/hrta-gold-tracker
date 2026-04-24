@@ -16,7 +16,6 @@
     .metric-value { font-size: 22px; font-weight: 500; }
     .metric-sub { font-size: 11px; color: #aaa; margin-top: 4px; }
     .card { background: #fff; border-radius: 10px; padding: 20px; border: 1px solid #e5e5e5; margin-bottom: 20px; }
-    .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
     select { font-size: 13px; padding: 7px 12px; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer; }
     .chart-wrap { height: 280px; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -30,14 +29,13 @@
     .section-title { font-size: 14px; font-weight: 500; margin-bottom: 12px; }
     .loading { text-align: center; padding: 40px; color: #888; font-size: 14px; }
     .last-update { font-size: 12px; color: #aaa; }
-
     input[type="date"] { font-size: 13px; padding: 7px 12px; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer; color: #1a1a1a; }
-    .controls-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
-    .controls-row + .controls-row { padding-top: 10px; border-top: 1px solid #eee; }
+    .controls-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
     .separator { color: #ccc; font-size: 13px; }
-    .divider { width: 100%; height: 1px; background: #eee; margin: 4px 0; }
-    
-    
+    .btn { font-size: 13px; padding: 7px 14px; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer; font-weight: 500; }
+    .btn:hover { background: #f5f5f0; }
+    .btn-green { background: #1a9e6e; color: #fff; border-color: #1a9e6e; }
+    .btn-green:hover { background: #158a5e; }
   </style>
 </head>
 <body>
@@ -46,72 +44,93 @@
 <p class="sub">Data diperbarui otomatis setiap 3 jam dari hrtagold.id</p>
 
 <div class="metrics">
-  <div class="metric"><div class="metric-label" id="label-price">Harga Jual (1gr Gold)</div><div class="metric-value" id="m-price">—</div><div class="metric-sub last-update" id="m-date">Memuat...</div></div>
-  <div class="metric"><div class="metric-label" id="label-buyback">Buyback (1gr Gold)</div><div class="metric-value" id="m-buyback">—</div><div class="metric-sub">Harga beli kembali</div></div>
-  <div class="metric"><div class="metric-label">Spread</div><div class="metric-value" id="m-spread">—</div><div class="metric-sub">Selisih jual vs buyback</div></div>
-  <div class="metric"><div class="metric-label" id="label-change">Perubahan</div><div class="metric-value" id="m-change">—</div><div class="metric-sub" id="m-change-sub">vs update sebelumnya</div></div>
+  <div class="metric">
+    <div class="metric-label" id="label-price">Harga Jual (1gr Gold)</div>
+    <div class="metric-value" id="m-price">—</div>
+    <div class="metric-sub last-update" id="m-date">Memuat...</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label" id="label-buyback">Buyback (1gr Gold)</div>
+    <div class="metric-value" id="m-buyback">—</div>
+    <div class="metric-sub">Harga beli kembali</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">Spread</div>
+    <div class="metric-value" id="m-spread">—</div>
+    <div class="metric-sub">Selisih jual vs buyback</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label" id="label-change">Perubahan</div>
+    <div class="metric-value" id="m-change">—</div>
+    <div class="metric-sub" id="m-change-sub">vs update sebelumnya</div>
+  </div>
 </div>
 
+<!-- Card Grafik -->
 <div class="card">
   <div class="controls-row">
-  <select id="gramasi-select">
-    <option value="0.1">0.1 gram</option>
-    <option value="0.25">0.25 gram</option>
-    <option value="0.5">0.5 gram</option>
-    <option value="1" selected>1 gram</option>
-    <option value="2">2 gram</option>
-    <option value="5">5 gram</option>
-    <option value="10">10 gram</option>
-    <option value="25">25 gram</option>
-    <option value="50">50 gram</option>
-    <option value="100">100 gram</option>
-    <option value="125">125 gram</option>
-    <option value="150">150 gram</option>
-    <option value="175">175 gram</option>
-    <option value="200">200 gram</option>
-    <option value="250">250 gram</option>
-    <option value="500">500 gram</option>
-    <option value="1000">1000 gram</option>
-  </select>
-  <select id="series-select">
-    <option value="Gold">Gold</option>
-    <option value="Prime">Prime</option>
-  </select>
-  <span class="separator">|</span>
-  <select id="range-select" onchange="toggleDatePicker(this.value)">
-    <option value="7">7 hari terakhir</option>
-    <option value="14">14 hari terakhir</option>
-    <option value="30" selected>30 hari terakhir</option>
-    <option value="0">Semua data</option>
-    <option value="custom">Pilih tanggal...</option>
-  </select>
-  <div id="date-picker" style="display:none; gap:8px; align-items:center;" class="controls-row">
-    <input type="date" id="date-from" style="width:140px">
-    <span class="separator">s/d</span>
-    <input type="date" id="date-to" style="width:140px">
-    <button class="btn btn-green" onclick="applyDateFilter()">Terapkan</button>
-    <button class="btn" onclick="resetDateFilter()">Reset</button>
+    <select id="gramasi-select">
+      <option value="0.1">0.1 gram</option>
+      <option value="0.25">0.25 gram</option>
+      <option value="0.5">0.5 gram</option>
+      <option value="1" selected>1 gram</option>
+      <option value="2">2 gram</option>
+      <option value="5">5 gram</option>
+      <option value="10">10 gram</option>
+      <option value="25">25 gram</option>
+      <option value="50">50 gram</option>
+      <option value="100">100 gram</option>
+      <option value="125">125 gram</option>
+      <option value="150">150 gram</option>
+      <option value="175">175 gram</option>
+      <option value="200">200 gram</option>
+      <option value="250">250 gram</option>
+      <option value="500">500 gram</option>
+      <option value="1000">1000 gram</option>
+    </select>
+    <select id="series-select">
+      <option value="Gold">Gold</option>
+      <option value="Prime">Prime</option>
+    </select>
+    <span class="separator">|</span>
+    <select id="range-select" onchange="toggleDatePicker(this.value)">
+      <option value="7">7 hari terakhir</option>
+      <option value="14">14 hari terakhir</option>
+      <option value="30" selected>30 hari terakhir</option>
+      <option value="0">Semua data</option>
+      <option value="custom">Pilih tanggal...</option>
+    </select>
+    <div id="date-picker" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;" class="controls-row">
+      <input type="date" id="date-from" style="width:140px">
+      <span class="separator">s/d</span>
+      <input type="date" id="date-to" style="width:140px">
+      <button class="btn btn-green" onclick="applyDateFilter()">Terapkan</button>
+      <button class="btn" onclick="resetDateFilter()">Reset</button>
+    </div>
+    <span class="separator">|</span>
+    <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
+    <button class="btn" onclick="exportJSON()">Export JSON</button>
   </div>
-  <span class="separator">|</span>
-  <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
-  <button class="btn" onclick="exportJSON()">Export JSON</button>
+  <p class="section-title">Grafik Harga Jual vs Buyback</p>
+  <div class="chart-wrap">
+    <canvas id="chart"></canvas>
+  </div>
 </div>
 
+<!-- Card Tabel -->
 <div class="card">
   <p class="section-title">Riwayat Lengkap</p>
   <div id="table-wrap"><div class="loading">Memuat data...</div></div>
 </div>
 
 <script>
-// ⚠️ GANTI INI dengan username dan nama repo kamu
 const USERNAME = 'frosch-enchanter';
 const REPO = 'hrta-gold-tracker';
-
 const CSV_URL = `https://raw.githubusercontent.com/${USERNAME}/${REPO}/main/gold_history.csv`;
 
 let allData = [];
 let chart = null;
-  
+
 function fmt(n) { return 'Rp ' + Math.round(n).toLocaleString('id-ID'); }
 function fmtDate(s) {
   const d = new Date(s);
@@ -123,7 +142,6 @@ async function loadCSV() {
   const res = await fetch(CSV_URL + '?t=' + Date.now());
   const text = await res.text();
   const lines = text.trim().split('\n');
-  const headers = lines[0].split(',');
   return lines.slice(1).map(line => {
     const cols = line.split(',');
     return {
@@ -142,7 +160,6 @@ function getFiltered() {
   const range = document.getElementById('range-select').value;
   let data = allData.filter(r => r.gramasi === gramasi && r.series === series);
   data.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
-
   if (range === 'custom') {
     const from = document.getElementById('date-from').value;
     const to = document.getElementById('date-to').value;
@@ -160,14 +177,11 @@ function updateMetrics() {
   const gramasi = parseFloat(document.getElementById('gramasi-select').value);
   const series = document.getElementById('series-select').value;
   const label = gramasi + 'gr';
-
   let filtered = allData.filter(r => r.gramasi === gramasi && r.series === series);
   filtered.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
   if (!filtered.length) return;
-
   const last = filtered[filtered.length - 1];
   const prev = filtered.length > 1 ? filtered[filtered.length - 2] : null;
-
   document.getElementById('label-price').textContent = `Harga Jual (${label} ${series})`;
   document.getElementById('label-buyback').textContent = `Buyback (${label} ${series})`;
   document.getElementById('m-price').textContent = fmt(last.harga_jual);
@@ -175,8 +189,6 @@ function updateMetrics() {
   document.getElementById('m-spread').textContent =
     (((last.harga_jual - last.harga_buyback) / last.harga_jual) * 100).toFixed(1) + '%';
   document.getElementById('m-date').textContent = 'Update: ' + fmtDate(last.tanggal);
-
-  // Opsi A — perubahan dari data sebelumnya
   if (prev) {
     const diff = last.harga_jual - prev.harga_jual;
     const pct = ((diff / prev.harga_jual) * 100).toFixed(2);
@@ -254,35 +266,6 @@ function renderTable(data) {
   </table>`;
 }
 
-// ⚠️ PEMILIHAN BERDASARKAN JENIS GOLD / PRIME
-document.getElementById('gramasi-select').addEventListener('change', refresh);
-document.getElementById('series-select').addEventListener('change', function() {
-  const series = this.value;
-  const gramasiSelect = document.getElementById('gramasi-select');
-  
-  const goldOptions = [
-    ['0.5', '0.5 gram'],
-    ['1', '1 gram'], ['2', '2 gram'], ['5', '5 gram'], ['10', '10 gram'],
-    ['25', '25 gram'], ['50', '50 gram'], ['100', '100 gram'],
-    ['125', '125 gram'], ['150', '150 gram'], ['175', '175 gram'],
-    ['200', '200 gram'], ['250', '250 gram'], ['500', '500 gram'],
-    ['1000', '1000 gram']
-  ];
-  
-  const primeOptions = [
-    ['25', '25 gram'], ['50', '50 gram'], ['100', '100 gram']
-  ];
-  
-  const options = series === 'Prime' ? primeOptions : goldOptions;
-  const defaultVal = series === 'Prime' ? '25' : '1';
-  
-  gramasiSelect.innerHTML = options
-    .map(([v, l]) => `<option value="${v}"${v === defaultVal ? ' selected' : ''}>${l}</option>`)
-    .join('');
-  
-  refresh();
-});
-  
 function refresh() {
   const data = getFiltered();
   updateMetrics();
@@ -290,34 +273,73 @@ function refresh() {
   renderTable(data);
 }
 
-  
-document.getElementById('range-select').addEventListener('change', refresh);
-
-loadCSV().then(data => {
-  allData = data;
-  updateMetrics();
-  refresh();
-}).catch(() => {
-  document.getElementById('table-wrap').innerHTML =
-    '<div class="loading">Gagal memuat data. Pastikan USERNAME dan REPO sudah diganti.</div>';
-});
-
 function toggleDatePicker(val) {
   const picker = document.getElementById('date-picker');
   picker.style.display = val === 'custom' ? 'flex' : 'none';
   if (val !== 'custom') refresh();
 }
 
-function applyDateFilter() {
-  refresh();
-}
+function applyDateFilter() { refresh(); }
 
 function resetDateFilter() {
   document.getElementById('date-from').value = '';
   document.getElementById('date-to').value = '';
   refresh();
 }
-  
+
+function getFilterLabel() {
+  const g = document.getElementById('gramasi-select').value;
+  const s = document.getElementById('series-select').value;
+  return s.toLowerCase() + '_' + g + 'gr';
+}
+
+function download(filename, content, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type }));
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportCSV() {
+  const data = getFiltered();
+  const rows = [['tanggal_update', 'series', 'gramasi', 'harga_jual', 'harga_buyback']];
+  data.forEach(r => rows.push([r.tanggal, r.series, r.gramasi, r.harga_jual, r.harga_buyback]));
+  download('hrta_gold_' + getFilterLabel() + '.csv', rows.map(r => r.join(',')).join('\n'), 'text/csv');
+}
+
+function exportJSON() {
+  const data = getFiltered();
+  download('hrta_gold_' + getFilterLabel() + '.json', JSON.stringify(data, null, 2), 'application/json');
+}
+
+document.getElementById('gramasi-select').addEventListener('change', refresh);
+document.getElementById('range-select').addEventListener('change', refresh);
+document.getElementById('series-select').addEventListener('change', function() {
+  const series = this.value;
+  const gramasiSelect = document.getElementById('gramasi-select');
+  const goldOptions = [
+    ['0.1','0.1 gram'],['0.25','0.25 gram'],['0.5','0.5 gram'],['1','1 gram'],
+    ['2','2 gram'],['5','5 gram'],['10','10 gram'],['25','25 gram'],
+    ['50','50 gram'],['100','100 gram'],['125','125 gram'],['150','150 gram'],
+    ['175','175 gram'],['200','200 gram'],['250','250 gram'],['500','500 gram'],['1000','1000 gram']
+  ];
+  const primeOptions = [['25','25 gram'],['50','50 gram'],['100','100 gram']];
+  const options = series === 'Prime' ? primeOptions : goldOptions;
+  const defaultVal = series === 'Prime' ? '25' : '1';
+  gramasiSelect.innerHTML = options
+    .map(([v, l]) => `<option value="${v}"${v === defaultVal ? ' selected' : ''}>${l}</option>`)
+    .join('');
+  setTimeout(refresh, 0);
+});
+
+loadCSV().then(data => {
+  allData = data;
+  refresh();
+}).catch(() => {
+  document.getElementById('table-wrap').innerHTML =
+    '<div class="loading">Gagal memuat data. Pastikan USERNAME dan REPO sudah diganti.</div>';
+});
 </script>
 </body>
 </html>
