@@ -30,6 +30,12 @@
     .section-title { font-size: 14px; font-weight: 500; margin-bottom: 12px; }
     .loading { text-align: center; padding: 40px; color: #888; font-size: 14px; }
     .last-update { font-size: 12px; color: #aaa; }
+
+    input[type="date"] { font-size: 13px; padding: 7px 12px; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer; color: #1a1a1a; }
+    .controls-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+    .divider { width: 100%; height: 1px; background: #eee; margin: 4px 0; }
+    
+    
   </style>
 </head>
 <body>
@@ -45,35 +51,49 @@
 </div>
 
 <div class="card">
-  <div class="controls">
-    <select id="gramasi-select">
-  <option value="0.5">0.5 gram</option>
-  <option value="1" selected>1 gram</option>
-  <option value="2">2 gram</option>
-  <option value="5">5 gram</option>
-  <option value="10">10 gram</option>
-  <option value="25">25 gram</option>
-  <option value="50">50 gram</option>
-  <option value="100">100 gram</option>
-  <option value="125">125 gram</option>
-  <option value="150">150 gram</option>
-  <option value="175">175 gram</option>
-  <option value="200">200 gram</option>
-  <option value="250">250 gram</option>
-  <option value="500">500 gram</option>
-  <option value="1000">1000 gram</option>
-</select>
-    <select id="series-select">
-      <option value="Gold">Gold</option>
-      <option value="Prime">Prime</option>
-    </select>
-    <select id="range-select">
-      <option value="30">30 hari terakhir</option>
-      <option value="14">14 hari terakhir</option>
-      <option value="7">7 hari terakhir</option>
-      <option value="0">Semua data</option>
-    </select>
+  <div class="controls-row">
+  <select id="gramasi-select">
+    <option value="0.1">0.1 gram</option>
+    <option value="0.25">0.25 gram</option>
+    <option value="0.5">0.5 gram</option>
+    <option value="1" selected>1 gram</option>
+    <option value="2">2 gram</option>
+    <option value="5">5 gram</option>
+    <option value="10">10 gram</option>
+    <option value="25">25 gram</option>
+    <option value="50">50 gram</option>
+    <option value="100">100 gram</option>
+    <option value="125">125 gram</option>
+    <option value="150">150 gram</option>
+    <option value="175">175 gram</option>
+    <option value="200">200 gram</option>
+    <option value="250">250 gram</option>
+    <option value="500">500 gram</option>
+    <option value="1000">1000 gram</option>
+  </select>
+  <select id="series-select">
+    <option value="Gold">Gold</option>
+    <option value="Prime">Prime</option>
+  </select>
+</div>
+<div class="controls-row">
+  <select id="range-select" onchange="toggleDatePicker(this.value)">
+    <option value="7">7 hari terakhir</option>
+    <option value="14">14 hari terakhir</option>
+    <option value="30" selected>30 hari terakhir</option>
+    <option value="0">Semua data</option>
+    <option value="custom">Pilih tanggal...</option>
+  </select>
+  <div id="date-picker" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;" class="controls-row">
+    <input type="date" id="date-from">
+    <span style="font-size:13px;color:#888">s/d</span>
+    <input type="date" id="date-to">
+    <button class="btn btn-green" onclick="applyDateFilter()">Terapkan</button>
+    <button class="btn" onclick="resetDateFilter()">Reset</button>
   </div>
+  <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
+  <button class="btn" onclick="exportJSON()">Export JSON</button>
+</div>
   <p class="section-title">Grafik Harga Jual vs Buyback</p>
   <div class="chart-wrap"><canvas id="chart"></canvas></div>
 </div>
@@ -120,12 +140,18 @@ async function loadCSV() {
 function getFiltered() {
   const gramasi = parseFloat(document.getElementById('gramasi-select').value);
   const series = document.getElementById('series-select').value;
-  const range = parseInt(document.getElementById('range-select').value);
+  const range = document.getElementById('range-select').value;
   let data = allData.filter(r => r.gramasi === gramasi && r.series === series);
   data.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
-  if (range > 0) {
+
+  if (range === 'custom') {
+    const from = document.getElementById('date-from').value;
+    const to = document.getElementById('date-to').value;
+    if (from) data = data.filter(r => r.tanggal >= from);
+    if (to) data = data.filter(r => r.tanggal.slice(0, 10) <= to);
+  } else if (parseInt(range) > 0) {
     const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - range);
+    cutoff.setDate(cutoff.getDate() - parseInt(range));
     data = data.filter(r => new Date(r.tanggal) >= cutoff);
   }
   return data;
@@ -276,6 +302,23 @@ loadCSV().then(data => {
   document.getElementById('table-wrap').innerHTML =
     '<div class="loading">Gagal memuat data. Pastikan USERNAME dan REPO sudah diganti.</div>';
 });
+
+function toggleDatePicker(val) {
+  const picker = document.getElementById('date-picker');
+  picker.style.display = val === 'custom' ? 'flex' : 'none';
+  if (val !== 'custom') refresh();
+}
+
+function applyDateFilter() {
+  refresh();
+}
+
+function resetDateFilter() {
+  document.getElementById('date-from').value = '';
+  document.getElementById('date-to').value = '';
+  refresh();
+}
+  
 </script>
 </body>
 </html>
