@@ -7,12 +7,14 @@ r = requests.get(url, headers=headers, timeout=10)
 data = r.json()
 tanggal_update = data["updated_date"]
 
-# Cek apakah tanggal ini sudah pernah disimpan
+# Cek sampai menit saja (bukan detik) agar tidak miss
+tanggal_cek = tanggal_update[:16]
+
 sudah_ada = False
 if os.path.exists("gold_history.csv"):
     with open("gold_history.csv", "r") as f:
         for baris in f:
-            if tanggal_update[:19] in baris:  # cek sampai detik
+            if tanggal_cek in baris:
                 sudah_ada = True
                 break
 
