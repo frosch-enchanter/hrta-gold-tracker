@@ -18,10 +18,6 @@
     .card { background: #fff; border-radius: 10px; padding: 20px; border: 1px solid #e5e5e5; margin-bottom: 20px; }
     select { font-size: 13px; padding: 7px 12px; border-radius: 8px; border: 1px solid #ddd; background: #fff; cursor: pointer; }
     .chart-wrap { height: 280px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; color: #888; font-weight: 500; white-space: nowrap; }
-    td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
-    tr:last-child td { border-bottom: none; }
     .up { color: #1a9e6e; } .down { color: #d95030; }
     .tag { font-size: 11px; padding: 2px 8px; border-radius: 99px; font-weight: 500; }
     .tag-gold { background: #faeeda; color: #854f0b; }
@@ -36,6 +32,41 @@
     .btn:hover { background: #f5f5f0; }
     .btn-green { background: #1a9e6e; color: #fff; border-color: #1a9e6e; }
     .btn-green:hover { background: #158a5e; }
+
+    /* Table desktop */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; color: #888; font-weight: 500; white-space: nowrap; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; }
+    tr:last-child td { border-bottom: none; }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      h1 { font-size: 17px; }
+      .metrics { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .metric { padding: 12px; }
+      .metric-value { font-size: 17px; }
+      .card { padding: 14px; }
+      .chart-wrap { height: 220px; }
+      select, input[type="date"] { font-size: 12px; padding: 6px 8px; width: 100%; }
+      .controls-row { flex-direction: column; align-items: stretch; gap: 6px; }
+      .separator { display: none; }
+      .btn { width: 100%; text-align: center; padding: 9px; font-size: 13px; }
+
+      /* Tabel mobile — card style per baris */
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      tr { background: #fff; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; padding: 10px 12px; }
+      td { border: none; padding: 4px 0; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+      td::before {
+        content: attr(data-label);
+        font-size: 11px;
+        color: #888;
+        font-weight: 500;
+        flex-shrink: 0;
+        margin-right: 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -69,48 +100,47 @@
 <!-- Card Grafik -->
 <div class="card">
   <div class="controls-row">
-  <select id="gramasi-select">
-    <option value="0.5">0.5 gram</option>
-    <option value="1" selected>1 gram</option>
-    <option value="2">2 gram</option>
-    <option value="5">5 gram</option>
-    <option value="10">10 gram</option>
-    <option value="25">25 gram</option>
-    <option value="50">50 gram</option>
-    <option value="100">100 gram</option>
-    <option value="125">125 gram</option>
-    <option value="150">150 gram</option>
-    <option value="175">175 gram</option>
-    <option value="200">200 gram</option>
-    <option value="250">250 gram</option>
-    <option value="500">500 gram</option>
-    <option value="1000">1000 gram</option>
-  </select>
-  <select id="series-select">
-    <option value="Gold">Gold</option>
-    <option value="Prime">Prime</option>
-  </select>
-  <span class="separator">|</span>
-  <select id="range-select" onchange="toggleDatePicker(this.value)">
-    <option value="7">7 hari terakhir</option>
-    <option value="14">14 hari terakhir</option>
-    <option value="30" selected>30 hari terakhir</option>
-    <option value="0">Semua data</option>
-    <option value="custom">Pilih tanggal...</option>
-  </select>
-  <span class="separator">|</span>
-  <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
-  <button class="btn" onclick="exportJSON()">Export JSON</button>
-</div>
-
-<!-- Baris kedua khusus date picker -->
-<div id="date-picker" style="display:none; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:16px;">
-  <input type="date" id="date-from" style="width:150px">
-  <span class="separator">s/d</span>
-  <input type="date" id="date-to" style="width:150px">
-  <button class="btn btn-green" onclick="applyDateFilter()">Terapkan</button>
-  <button class="btn" onclick="resetDateFilter()">Reset</button>
-</div>
+    <select id="gramasi-select">
+      <option value="0.1">0.1 gram</option>
+      <option value="0.25">0.25 gram</option>
+      <option value="0.5">0.5 gram</option>
+      <option value="1" selected>1 gram</option>
+      <option value="2">2 gram</option>
+      <option value="5">5 gram</option>
+      <option value="10">10 gram</option>
+      <option value="25">25 gram</option>
+      <option value="50">50 gram</option>
+      <option value="100">100 gram</option>
+      <option value="125">125 gram</option>
+      <option value="150">150 gram</option>
+      <option value="175">175 gram</option>
+      <option value="200">200 gram</option>
+      <option value="250">250 gram</option>
+      <option value="500">500 gram</option>
+      <option value="1000">1000 gram</option>
+    </select>
+    <select id="series-select">
+      <option value="Gold">Gold</option>
+      <option value="Prime">Prime</option>
+    </select>
+    <span class="separator">|</span>
+    <select id="range-select" onchange="toggleDatePicker(this.value)">
+      <option value="7">7 hari terakhir</option>
+      <option value="14">14 hari terakhir</option>
+      <option value="30" selected>30 hari terakhir</option>
+      <option value="0">Semua data</option>
+      <option value="custom">Pilih tanggal...</option>
+    </select>
+    <div id="date-picker" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;" class="controls-row">
+      <input type="date" id="date-from" style="width:140px">
+      <span class="separator">s/d</span>
+      <input type="date" id="date-to" style="width:140px">
+      <button class="btn btn-green" onclick="applyDateFilter()">Terapkan</button>
+      <button class="btn" onclick="resetDateFilter()">Reset</button>
+    </div>
+    <span class="separator">|</span>
+    <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
+    <button class="btn" onclick="exportJSON()">Export JSON</button>
   </div>
   <p class="section-title">Grafik Harga Jual vs Buyback</p>
   <div class="chart-wrap">
@@ -227,46 +257,13 @@ function renderChart(data) {
       ]
     },
     options: {
-  responsive: true, maintainAspectRatio: false,
-  interaction: { mode: 'index', intersect: false },
-  plugins: {
-    legend: { labels: { font: { size: 12 } } },
-    tooltip: {
-      backgroundColor: '#fff',
-      borderColor: '#e5e5e5',
-      borderWidth: 1,
-      titleColor: '#1a1a1a',
-      bodyColor: '#444',
-      padding: 12,
-      cornerRadius: 8,
-      displayColors: true,
-      callbacks: {
-        title: function(items) {
-          return items[0].label;
-        },
-        label: function(item) {
-          const val = item.raw;
-          return ' ' + item.dataset.label + ': Rp ' + Math.round(val).toLocaleString('id-ID');
-        },
-        afterBody: function(items) {
-          if (items.length >= 2) {
-            const jual = items[0].raw;
-            const buyback = items[1].raw;
-            const spread = (((jual - buyback) / jual) * 100).toFixed(1);
-            const selisih = Math.round(jual - buyback).toLocaleString('id-ID');
-            return ['', '  Spread : Rp ' + selisih + ' (' + spread + '%)'];
-          }
-          return [];
-        }
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { font: { size: 12 } } } },
+      scales: {
+        y: { ticks: { callback: v => 'Rp ' + (v / 1000000).toFixed(2) + 'jt', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        x: { ticks: { font: { size: 10 }, autoSkip: true, maxTicksLimit: 10 }, grid: { display: false } }
       }
     }
-  },
-  hover: { mode: 'index', intersect: false },
-  scales: {
-    y: { ticks: { callback: v => 'Rp ' + (v / 1000000).toFixed(2) + 'jt', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
-    x: { ticks: { font: { size: 10 }, autoSkip: true, maxTicksLimit: 10 }, grid: { display: false } }
-  }
-}
   });
 }
 
@@ -285,13 +282,13 @@ function renderTable(data) {
     }
     const tag = r.series === 'Gold' ? 'tag-gold' : 'tag-prime';
     return `<tr>
-      <td>${fmtDate(r.tanggal)}</td>
-      <td><span class="tag ${tag}">${r.series}</span></td>
-      <td>${r.gramasi}gr</td>
-      <td>${fmt(r.harga_jual)}</td>
-      <td>${fmt(r.harga_buyback)}</td>
-      <td>${(((r.harga_jual - r.harga_buyback) / r.harga_jual) * 100).toFixed(1)}%</td>
-      <td>${change}</td>
+      <td data-label="Waktu">${fmtDate(r.tanggal)}</td>
+      <td data-label="Series"><span class="tag ${tag}">${r.series}</span></td>
+      <td data-label="Gramasi">${r.gramasi}gr</td>
+      <td data-label="Harga Jual">${fmt(r.harga_jual)}</td>
+      <td data-label="Buyback">${fmt(r.harga_buyback)}</td>
+      <td data-label="Spread">${(((r.harga_jual - r.harga_buyback) / r.harga_jual) * 100).toFixed(1)}%</td>
+      <td data-label="Perubahan">${change}</td>
     </tr>`;
   });
   wrap.innerHTML = `<table>
@@ -353,7 +350,7 @@ document.getElementById('series-select').addEventListener('change', function() {
   const series = this.value;
   const gramasiSelect = document.getElementById('gramasi-select');
   const goldOptions = [
-    ['0.5','0.5 gram'],['1','1 gram'],
+    ['0.1','0.1 gram'],['0.25','0.25 gram'],['0.5','0.5 gram'],['1','1 gram'],
     ['2','2 gram'],['5','5 gram'],['10','10 gram'],['25','25 gram'],
     ['50','50 gram'],['100','100 gram'],['125','125 gram'],['150','150 gram'],
     ['175','175 gram'],['200','200 gram'],['250','250 gram'],['500','500 gram'],['1000','1000 gram']
