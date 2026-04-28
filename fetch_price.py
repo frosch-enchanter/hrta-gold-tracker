@@ -7,18 +7,19 @@ r = requests.get(url, headers=headers, timeout=10)
 data = r.json()
 tanggal_update = data["updated_date"]
 
-# Cek sampai menit saja (bukan detik) agar tidak miss
-tanggal_cek = tanggal_update[:16]
-
-sudah_ada = False
+# Ambil baris terakhir di CSV untuk dibandingkan
+baris_terakhir = None
 if os.path.exists("gold_history.csv"):
     with open("gold_history.csv", "r") as f:
-        for baris in f:
-            if tanggal_cek in baris:
-                sudah_ada = True
+        lines = f.readlines()
+        # Cari baris data terakhir (bukan header)
+        for line in reversed(lines):
+            line = line.strip()
+            if line and not line.startswith("tanggal"):
+                baris_terakhir = line.split(",")[0]
                 break
 
-if sudah_ada:
+if baris_terakhir == tanggal_update:
     print("Harga belum berubah, skip:", tanggal_update)
 else:
     file_exists = os.path.exists("gold_history.csv")
