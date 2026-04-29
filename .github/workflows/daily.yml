@@ -2,13 +2,13 @@ name: Fetch HRTA Gold Price
 
 on:
   schedule:
-    - cron: '0 0 * * *'    # 08.00 WITA
-    - cron: '0 1 * * *'    # 09.00 WITA
+    - cron: '30 0 * * *'   # 08.30 WITA
+    - cron: '30 1 * * *'   # 09.30 WITA
     - cron: '1 4 * * *'    # 12.01 WITA
-    - cron: '0 6 * * *'    # 14.00 WITA
-    - cron: '0 9 * * *'    # 17.00 WITA
-    - cron: '0 10 * * *'   # 18.00 WITA
-    - cron: '0 13 * * *'   # 21.00 WITA
+    - cron: '30 5 * * *'   # 13.30 WITA
+    - cron: '30 7 * * *'   # 15.30 WITA
+    - cron: '30 9 * * *'   # 17.30 WITA
+    - cron: '30 11 * * *'  # 19.30 WITA
   workflow_dispatch:
 
 jobs:
