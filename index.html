@@ -99,6 +99,7 @@
 
 <!-- Card Grafik -->
 <div class="card">
+  <!-- Baris 1: Filter utama -->
   <div class="controls-row">
     <select id="gramasi-select">
       <option value="0.1">0.1 gram</option>
@@ -131,16 +132,18 @@
       <option value="0">Semua data</option>
       <option value="custom">Pilih tanggal...</option>
     </select>
-    <div id="date-picker" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;" class="controls-row">
-      <input type="date" id="date-from" style="width:140px">
-      <span class="separator">s/d</span>
-      <input type="date" id="date-to" style="width:140px">
-      <button class="btn btn-green" onclick="applyDateFilter()">Terapkan</button>
-      <button class="btn" onclick="resetDateFilter()">Reset</button>
-    </div>
     <span class="separator">|</span>
     <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
     <button class="btn" onclick="exportJSON()">Export JSON</button>
+  </div>
+  <!-- Baris 2: Date picker (muncul hanya saat "Pilih tanggal...") -->
+  <div id="date-picker" style="display:none; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:16px; padding:12px; background:#f9f9f7; border-radius:8px; border:1px solid #eee;">
+    <span style="font-size:13px; color:#888;">Dari</span>
+    <input type="date" id="date-from" style="width:150px">
+    <span style="font-size:13px; color:#888;">s/d</span>
+    <input type="date" id="date-to" style="width:150px">
+    <button class="btn btn-green" onclick="applyDateFilter()">Terapkan</button>
+    <button class="btn" onclick="resetDateFilter()">Reset</button>
   </div>
   <p class="section-title">Grafik Harga Jual vs Buyback</p>
   <div class="chart-wrap">
