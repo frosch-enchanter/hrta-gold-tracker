@@ -302,15 +302,25 @@ function renderChart(data) {
   });
 }
 
+const PAGE_SIZE = 10;
+let visibleRows = PAGE_SIZE;
+
 function renderTable(data) {
   const wrap = document.getElementById('table-wrap');
   if (!data.length) { wrap.innerHTML = '<div class="loading">Belum ada data untuk filter ini.</div>'; return; }
-  const rows = [...data].reverse().map((r, i, arr) => {
-    const prev = arr[i + 1];
+  
+  const reversed = [...data].reverse();
+  const visible = reversed.slice(0, visibleRows);
+  const remaining = reversed.length - visibleRows;
+
+  const rows = visible.map((r, i, arr) => {
+    const prev = arr[i + 1] || reversed[visibleRows]; // ambil prev dari data lengkap
+    const origIndex = reversed.indexOf(r);
+    const prevItem = reversed[origIndex + 1];
     let change = '—';
-    if (prev) {
-      const diff = r.harga_jual - prev.harga_jual;
-      const pct = ((diff / prev.harga_jual) * 100).toFixed(2);
+    if (prevItem) {
+      const diff = r.harga_jual - prevItem.harga_jual;
+      const pct = ((diff / prevItem.harga_jual) * 100).toFixed(2);
       if (diff > 0) change = `<span class="up">▲ ${fmt(diff)} (+${pct}%)</span>`;
       else if (diff < 0) change = `<span class="down">▼ ${fmt(Math.abs(diff))} (${pct}%)</span>`;
       else change = '<span style="color:#aaa">Tetap</span>';
@@ -326,13 +336,29 @@ function renderTable(data) {
       <td data-label="Perubahan">${change}</td>
     </tr>`;
   });
+
+  const loadMoreBtn = remaining > 0
+    ? `<div style="text-align:center; padding:16px;">
+        <button class="btn" onclick="loadMore()" style="padding:8px 24px;">
+          Tampilkan ${Math.min(remaining, PAGE_SIZE)} lagi (sisa ${remaining})
+        </button>
+       </div>`
+    : `<div style="text-align:center; padding:12px; font-size:12px; color:#aaa;">Semua data ditampilkan</div>`;
+
   wrap.innerHTML = `<table>
     <thead><tr><th>Waktu</th><th>Series</th><th>Gramasi</th><th>Harga Jual</th><th>Buyback</th><th>Spread</th><th>Perubahan</th></tr></thead>
     <tbody>${rows.join('')}</tbody>
-  </table>`;
+  </table>${loadMoreBtn}`;
+}
+
+function loadMore() {
+  visibleRows += PAGE_SIZE;
+  const data = getFiltered();
+  renderTable(data);
 }
 
 function refresh() {
+  visibleRows = PAGE_SIZE;
   const data = getFiltered();
   updateMetrics();
   renderChart(data);
