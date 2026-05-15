@@ -95,7 +95,7 @@
   <div class="metric">
     <div class="metric-label">Spread</div>
     <div class="metric-value" id="m-spread">—</div>
-    <div class="metric-sub">Selisih jual vs buyback</div>
+    <div class="metric-sub" id="m-spread-sub">Selisih jual vs buyback</div>
   </div>
   <div class="metric">
     <div class="metric-label" id="label-change">Perubahan</div>
@@ -227,23 +227,27 @@ function updateMetrics() {
   document.getElementById('label-buyback').textContent = `Buyback (${label} ${series})`;
   document.getElementById('m-price').textContent = fmt(last.harga_jual);
   document.getElementById('m-buyback').textContent = fmt(last.harga_buyback);
-  document.getElementById('m-spread').textContent =
-    (((last.harga_jual - last.harga_buyback) / last.harga_jual) * 100).toFixed(1) + '%';
+  
+  const spreadPct = (((last.harga_jual - last.harga_buyback) / last.harga_jual) * 100).toFixed(1);
+  const spreadRp = fmt(last.harga_jual - last.harga_buyback);
+  document.getElementById('m-spread').textContent = spreadPct + '%';
+  document.getElementById('m-spread-sub').textContent = spreadRp;
+  
   document.getElementById('m-date').textContent = 'Update: ' + fmtDate(last.tanggal);
-  if (prev) {
-    const diff = last.harga_jual - prev.harga_jual;
-    const pct = ((diff / prev.harga_jual) * 100).toFixed(2);
+  // Cari harga terakhir yang benar-benar berbeda
+  const prevChanged = filtered.slice(0, -1).reverse().find(r => r.harga_jual !== last.harga_jual);
+  if (prevChanged) {
+    const diff = last.harga_jual - prevChanged.harga_jual;
+    const pct = ((diff / prevChanged.harga_jual) * 100).toFixed(2);
     if (diff > 0) {
       document.getElementById('m-change').textContent = `▲ ${fmt(diff)} (+${pct}%)`;
       document.getElementById('m-change').style.color = '#1a9e6e';
     } else if (diff < 0) {
       document.getElementById('m-change').textContent = `▼ ${fmt(Math.abs(diff))} (${pct}%)`;
       document.getElementById('m-change').style.color = '#d95030';
-    } else {
-      document.getElementById('m-change').textContent = 'Tidak ada perubahan';
-      document.getElementById('m-change').style.color = '#aaa';
     }
-    document.getElementById('m-change-sub').textContent = 'vs update sebelumnya';
+    const prevTime = fmtDate(prevChanged.tanggal);
+    document.getElementById('m-change-sub').textContent = 'vs ' + prevTime;
   } else {
     document.getElementById('m-change').textContent = '—';
     document.getElementById('m-change-sub').textContent = 'Belum ada data pembanding';
